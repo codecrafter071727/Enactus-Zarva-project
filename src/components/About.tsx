@@ -31,7 +31,7 @@ export function About() {
 
             <div className="space-y-6">
               <p className="text-gray-600 text-lg font-medium leading-relaxed">
-                Sarva is dedicated to revolutionizing women's safety through technology. Our platform 
+                Zarva is dedicated to revolutionizing women's safety through technology. Our platform 
                 combines innovative features like safe route navigation, voice recognition, and secure 
                 cab services to ensure women can move freely and confidently.
               </p>
