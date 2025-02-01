@@ -7,6 +7,8 @@ import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import SaferCab from './components/SaferCab';
+import SaferLocation from './components/SaferLocation';
+import Signin from './components/signin';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
               }
             />
             <Route path="/safer-cab" element={<SaferCab />} />
+            <Route path="/safer-location" element={<SaferLocation />} />
+            <Route path="/signin" element={<Signin />} />
           </Routes>
         </main>
         <Footer />

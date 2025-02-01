@@ -26,7 +26,8 @@ const features = [
     description: 'AI-powered route suggestions prioritizing your safety.',
     icon: Send,
     bgColor: 'bg-emerald-500',
-    hoverColor: 'hover:bg-emerald-600'
+    hoverColor: 'hover:bg-emerald-600',
+    link: '/safer-location'  // Use 'link' instead of 'Link'
   }
 ];
 
