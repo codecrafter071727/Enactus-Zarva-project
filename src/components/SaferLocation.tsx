@@ -1,152 +1,160 @@
-import React, { useState } from 'react';
-import { MapPin, Navigation, Shield, Car, Mic, Bell, Users, Clock } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+
+// Add this declaration to extend the window object
+declare global {
+  interface Window {
+    google: typeof google;
+  }
+}
+
+const loadGoogleMapsScript = (callback: () => void) => {
+  const existingScript = document.getElementById('googleMaps');
+  if (!existingScript) {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places`;
+    script.id = 'googleMaps';
+    document.body.appendChild(script);
+    script.onload = () => {
+      if (callback) callback();
+    };
+  }
+  if (existingScript && callback) callback();
+};
+import { MapPin, Navigation } from 'lucide-react';
 
 function App() {
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
+  const [mapUrl, setMapUrl] = useState('https://www.google.com/maps/embed/v1/place?key=AIzaSyALQLhxgvllyOzJiTgr467C8u3oUPtr_Rk&q=New+Delhi,India');
+  const mapRef = useRef(null);
+  const [mapInstance, setMapInstance] = useState(null);
+
+  // Initialize Google Maps
+  useEffect(() => {
+    const initializeMap = async () => {
+      try {
+        const { Map } = window.google.maps;
+
+        // Initialize map
+        const map = new Map(mapRef.current, {
+          center: { lat: 28.6139, lng: 77.2090 }, // New Delhi coordinates
+          zoom: 12,
+        });
+
+        setMapInstance(map);
+
+        // You can add the App Check implementation here if needed
+        // const app = initializeApp({
+        //   // Your firebase configuration object
+        // });
+        
+        // const appCheck = initializeAppCheck(app, {
+    loadGoogleMapsScript(() => {
+      // Only initialize if the ref is available
+      if (mapRef.current) {
+        initializeMap();
+      }
+    });
+        // });
+
+        // Settings.getInstance().fetchAppCheckToken = () =>
+        //     getToken(appCheck, false);
+
+      } catch (error) {
+        console.error('Error initializing map:', error);
+      }
+    };
+
+    // Only initialize if the ref is available
+    if (mapRef.current) {
+      initializeMap();
+    }
+  }, []);
+
+  // Existing useEffect for iframe URL updates (keeping as fallback)
+  useEffect(() => {
+    if (pickup && destination) {
+      const directions = `https://www.google.com/maps/embed/v1/directions?key=AIzaSyALQLhxgvllyOzJiTgr467C8u3oUPtr_Rk&origin=${encodeURIComponent(pickup)}&destination=${encodeURIComponent(destination)}`;
+      setMapUrl(directions);
+    } else if (pickup) {
+      setMapUrl(`https://www.google.com/maps/embed/v1/place?key=AIzaSyALQLhxgvllyOzJiTgr467C8u3oUPtr_Rk&q=${encodeURIComponent(pickup)}`);
+    } else if (destination) {
+      setMapUrl(`https://www.google.com/maps/embed/v1/place?key=AIzaSyALQLhxgvllyOzJiTgr467C8u3oUPtr_Rk&q=${encodeURIComponent(destination)}`);
+    }
+  }, [pickup, destination]);
 
   return (
-    <div className="min-h-screen bg-[#FDF8F3]">
-      {/* Navigation Bar */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Shield className="h-8 w-8 text-black" />
-              <span className="ml-2 text-xl font-bold text-black">Zarva</span>
-            </div>
-            <div className="flex space-x-4">
-              <div className="flex items-center text-black">
-                <Car className="h-5 w-5 mr-1" />
-                <span>Safer Cabs</span>
-              </div>
-              <div className="flex items-center text-black">
-                <Mic className="h-5 w-5 mr-1" />
-                <span>Voice Recognition</span>
-              </div>
-              <div className="flex items-center text-black font-semibold">
-                <Navigation className="h-5 w-5 mr-1" />
-                <span>Safer Routes</span>
-              </div>
+    <div className="min-h-screen bg-[#FDF8F3] py-8">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Location Input Section */}
+        <div className="bg-white p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+          <h2 className="text-3xl font-extrabold text-black mb-8 relative">
+            Find Safer Routes
+            <span className="absolute bottom-0 left-0 w-20 h-1 bg-indigo-700 transform origin-left transition-all duration-300 group-hover:w-full"></span>
+          </h2>
+
+          {/* Pickup Location */}
+          <div className="mb-6 transform transition-all duration-300 hover:translate-x-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              Pickup Location
+            </label>
+            <div className="relative group">
+              <MapPin className="absolute left-3 top-3 h-6 w-6 text-gray-500 transition-colors duration-300 group-hover:text-indigo-600" />
+              <input
+                type="text"
+                value={pickup}
+                onChange={(e) => setPickup(e.target.value)}
+                className="pl-12 w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 hover:border-indigo-300"
+                placeholder="Enter pickup location"
+              />
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></div>
             </div>
           </div>
+
+          {/* Destination */}
+          <div className="mb-8 transform transition-all duration-300 hover:translate-x-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              Destination
+            </label>
+            <div className="relative group">
+              <Navigation className="absolute left-3 top-3 h-6 w-6 text-gray-500 transition-colors duration-300 group-hover:text-indigo-600" />
+              <input
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                className="pl-12 w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all duration-300 hover:border-indigo-300"
+                placeholder="Enter destination"
+              />
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></div>
+            </div>
+          </div>
+
+          <button className="w-full bg-indigo-700 text-white py-4 rounded-lg text-lg font-bold relative overflow-hidden group transition-all duration-300 hover:shadow-lg transform hover:translate-y-[-2px]">
+            <span className="relative z-10">Find Safe Route</span>
+            <div className="absolute inset-0 bg-indigo-800 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+          </button>
         </div>
-      </nav>
 
-      {/* Features Overview */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex items-center space-x-3">
-              <Bell className="h-8 w-8 text-black" />
-              <div>
-                <h3 className="font-semibold text-black">Real-time Alerts</h3>
-                <p className="text-sm text-gray-600">Instant notifications about route safety</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Users className="h-8 w-8 text-black" />
-              <div>
-                <h3 className="font-semibold text-black">Community Verified</h3>
-                <p className="text-sm text-gray-600">Routes rated by local community</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Clock className="h-8 w-8 text-black" />
-              <div>
-                <h3 className="font-semibold text-black">24/7 Monitoring</h3>
-                <p className="text-sm text-gray-600">Continuous safety updates</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Location Input Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold text-black mb-6">Find Safer Routes</h2>
-            
-            {/* Pickup Location */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Pickup Location</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  value={pickup}
-                  onChange={(e) => setPickup(e.target.value)}
-                  className="pl-10 w-full p-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-black focus:border-transparent"
-                  placeholder="Enter pickup location"
-                />
-              </div>
-            </div>
-
-            {/* Destination */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Destination</label>
-              <div className="relative">
-                <Navigation className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="pl-10 w-full p-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-black focus:border-transparent"
-                  placeholder="Enter destination"
-                />
-              </div>
-            </div>
-
-            <button className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors">
-              Find Safe Route
-            </button>
-
-            {/* Safety Features */}
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold text-black mb-4">Safety Features</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-center">
-                  <Shield className="h-5 w-5 mr-2" />
-                  Real-time safety alerts
-                </li>
-                <li className="flex items-center">
-                  <Shield className="h-5 w-5 mr-2" />
-                  Well-lit route priority
-                </li>
-                <li className="flex items-center">
-                  <Shield className="h-5 w-5 mr-2" />
-                  24/7 route monitoring
-                </li>
-              </ul>
-              
-              {/* Additional Safety Content */}
-              <div className="mt-6 p-4 bg-gray-50 rounded-md">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Your safety is our top priority. Our intelligent routing system analyzes multiple data points including street lighting, crime statistics, and real-time community reports to suggest the safest possible route for your journey. With over 100,000 verified safe routes and a growing community of users, Zarva ensures you reach your destination with peace of mind.
-                </p>
-                <div className="mt-4 grid grid-cols-2 gap-4 text-center text-sm">
-                  <div className="bg-white p-3 rounded-md">
-                    <div className="font-bold text-black">100k+</div>
-                    <div className="text-gray-600">Safe Routes</div>
-                  </div>
-                  <div className="bg-white p-3 rounded-md">
-                    <div className="font-bold text-black">98%</div>
-                    <div className="text-gray-600">User Safety Rating</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Map Section (Placeholder) */}
-          <div className="md:col-span-2 bg-gray-100 rounded-lg shadow-md min-h-[600px] flex items-center justify-center">
-            <div className="text-center">
-              <Navigation className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">Map will be integrated here</p>
-            </div>
-          </div>
+        {/* Map Section */}
+        <div className="rounded-xl shadow-lg overflow-hidden h-[600px] transform transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
+          {/* Primary Google Maps JS API div */}
+          <div 
+            ref={mapRef} 
+            className="w-full h-full rounded-xl"
+            style={{ display: mapInstance ? 'block' : 'none' }}
+          />
+          {/* Fallback iframe map */}
+          {!mapInstance && (
+            <iframe
+              width="100%"
+              height="100%"
+              className="rounded-xl"
+              frameBorder="0"
+              style={{ border: 0 }}
+              src={mapUrl}
+              allowFullScreen
+            />
+          )}
         </div>
       </div>
     </div>
