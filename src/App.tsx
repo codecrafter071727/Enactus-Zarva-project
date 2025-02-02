@@ -9,6 +9,9 @@ import { Footer } from './components/Footer';
 import SaferCab from './components/SaferCab';
 import SaferLocation from './components/SaferLocation';
 import Signin from './components/signin';
+import Speechrecognisation from './components/Speechrecognisation';
+import { Analytics } from "@vercel/analytics/react"
+import CoolComingSoon from './components/comingsoon';
 
 function App() {
   return (
@@ -31,9 +34,13 @@ function App() {
             <Route path="/safer-cab" element={<SaferCab />} />
             <Route path="/safer-location" element={<SaferLocation />} />
             <Route path="/signin" element={<Signin />} />
+            <Route path="/speech" element={<Speechrecognisation />} />
+            <Route path="/safer-cab/comingsoon" element={<CoolComingSoon />} />
+            
           </Routes>
         </main>
         <Footer />
+        <Analytics />
       </div>
     </Router>
   );

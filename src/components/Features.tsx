@@ -18,7 +18,9 @@ const features = [
     description: 'Quick voice commands for emergency situations and hands-free operation.',
     icon: Mic,
     bgColor: 'bg-purple-500',
-    hoverColor: 'hover:bg-purple-600'
+    hoverColor: 'hover:bg-purple-60',
+    link: '/speech'  // Use 'link' instead of 'Link'
+
   },
   {
     id: 'routes',

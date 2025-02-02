@@ -32,7 +32,7 @@ const AnimatedAuthForm = () => {
     }
   };
 
-  const getProviderIcon = (provider) => {
+  const getProviderIcon = (provider: string) => {
     switch(provider) {
       case 'Google':
         return 'https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png';
