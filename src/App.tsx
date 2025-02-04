@@ -13,6 +13,7 @@ import Speechrecognisation from './components/Speechrecognisation';
 import { Analytics } from "@vercel/analytics/react"
 import CoolComingSoon from './components/comingsoon';
 
+
 function App() {
   return (
     <Router>
@@ -36,6 +37,8 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/speech" element={<Speechrecognisation />} />
             <Route path="/safer-cab/comingsoon" element={<CoolComingSoon />} />
+            <Route path="/s" element={<CoolComingSoon />} />
+
             
           </Routes>
         </main>
