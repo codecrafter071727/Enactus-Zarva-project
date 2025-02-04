@@ -147,7 +147,7 @@ const SpeechRecognition: React.FC = () => {
 
   const initiateCall = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/twilio-call", {
+      const response = await fetch("https://enactus-zarva-project-3.onrender.com/api/twilio-call", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,7 +167,7 @@ const SpeechRecognition: React.FC = () => {
 
   const initiatemessage = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/twilio-message", {
+      const response = await fetch("https://enactus-zarva-project-3.onrender.com/api/twilio-message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -188,7 +188,7 @@ const SpeechRecognition: React.FC = () => {
   const initiatewhatsappmessage = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/twilio-send-whatsappmessage",
+        "https://enactus-zarva-project-3.onrender.com/api/twilio-send-whatsappmessage",
         {
           method: "POST",
           headers: {
