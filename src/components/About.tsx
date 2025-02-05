@@ -2,7 +2,7 @@ import React from 'react';
 
 export function About() {
   return (
-    <section className="py-8 px-4 bg-black mb-2"> {/* Black background */}
+    <section className="py-8 px-4 bg-[#44442e] mb-2"> {/* Black background */}
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Image Container */}

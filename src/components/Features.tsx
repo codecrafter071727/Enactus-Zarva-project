@@ -34,7 +34,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-10 bg-black">
+    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-8 lg:px-10 bg-[#0a0a02]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12 sm:mb-16">
           <h4 className="text-[#d5c58a] font-bold tracking-wide text-lg mb-3 animate-fade-in animate-slide-up"> {/* d5c58a, animations */}

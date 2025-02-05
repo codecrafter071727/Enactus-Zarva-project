@@ -17,7 +17,7 @@ import CoolComingSoon from './components/comingsoon';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-indigo-50 to-emerald-50">
+      <div className="min-h-screen bg-gradient-to-br from-[#d5c58a] via-gray-800 to-black">
         <Navigation />
         <main>
           <Routes>
