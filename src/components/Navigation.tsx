@@ -34,8 +34,8 @@ const Navbar = () => {
       <div
         className={`absolute md:static top-16 left-0 w-full md:w-auto bg-black md:bg-transparent flex flex-col md:flex-row md:items-center gap-9 p-4 md:p-0 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 md:opacity-100 md:translate-y-0'}`}
       >
-        <Link to="/signin" className="text-white hover:text-gray-300 text-base font-medium">
-          Login
+        <Link to="/" className="text-white hover:text-gray-300 text-base font-medium">
+          Home
         </Link>
         <Link
       to="/signin"
@@ -45,7 +45,7 @@ const Navbar = () => {
                  hover:drop-shadow-[0_0_15px_rgba(213,197,138,0.7)]  // Increased glow
                  hover:animate-float`} // Added float animation
     >
-      Sign Up
+      Sign in
     </Link>
       </div>
     </nav>
