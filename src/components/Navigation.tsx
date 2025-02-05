@@ -37,9 +37,16 @@ const Navbar = () => {
         <Link to="/signin" className="text-white hover:text-gray-300 text-base font-medium">
           Login
         </Link>
-        <Link to="/signin" className="bg-white text-black px-5 py-2.5 rounded-lg text-base font-medium hover:bg-gray-100">
-          Sign Up
-        </Link>
+        <Link
+      to="/signin"
+      className={`bg-gradient-to-r from-[#d0c085] to-[#c0b075] text-black px-5 py-2.5 rounded-lg text-base font-medium 
+                 hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
+                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+                 hover:drop-shadow-[0_0_15px_rgba(213,197,138,0.7)]  // Increased glow
+                 hover:animate-float`} // Added float animation
+    >
+      Sign Up
+    </Link>
       </div>
     </nav>
   );
