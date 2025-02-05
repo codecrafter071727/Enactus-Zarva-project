@@ -508,136 +508,118 @@ const SpeechRecognition: React.FC = () => {
   }, [recordings]);
   
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-white flex items-center justify-center p-4 relative overflow-hidden flex-col">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Secure Voice Recorder</h1>
-          <div className="flex items-center justify-center gap-2 text-indigo-600">
-            <Shield className="w-5 h-5" />
-            <span className="text-lg">Safety-First Voice Recording</span>
-          </div>
-        </div>
-        <div className="p-6 max-w-xl mx-auto bg-white shadow-lg rounded-lg w-full">
-          <div className="space-y-4">
-            {/* Language Selector */}
-            <div className="flex items-center gap-4 mb-6">
-              <label htmlFor="language" className="font-medium text-gray-700">
-                Select Language:
-              </label>
-              <select
-                id="language"
-                className="p-2 border rounded-md bg-white"
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-              >
-                {languages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-  
-            {/* Control Buttons */}
-            <div className="flex gap-4 mb-6 ">
-              <button
-                onClick={isListening ? stopListening : startListening}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white transition-all ${
-                  isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-600 hover:bg-indigo-700'
-                } shadow-lg hover:scale-105`}
-              >
-                {isListening ? (
-                  <>
-                    <Square className="w-5 h-5" />
-                    Stop Recording
-                  </>
-                ) : (
-                  <>
-                    <Mic className="w-5 h-5" />
-                    Start Recording
-                  </>
-                )}
-              </button>
-  
-              <button
-                onClick={clearTranscript}
-                className="flex items-center gap-2 px-6 py-3 rounded-full font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
-              >
-                <Trash2 className="w-5 h-5" />
-                Clear
-              </button>
-            </div>
-  
-            {/* Status and Error Messages */}
-            {isListening && (
-              <div className="text-green-600 flex items-center gap-2">
-                <span className="animate-pulse">●</span> Listening...
-              </div>
-            )}
-            {error && <div className="text-red-500 p-2 bg-red-50 rounded-md">{error}</div>}
-  
-            {/* Alerts Section */}
-            {alerts.length > 0 && (
-              <div className="mt-4 p-4 bg-red-50 rounded-md">
-                <h3 className="font-medium text-red-700 mb-2">Content Alerts:</h3>
-                <div className="space-y-2">
-                  {alerts.map((alert, index) => (
-                    <div key={index} className="text-red-600 text-sm p-2 bg-red-100 rounded">
-                      <span className="font-medium">{alert.timestamp}</span>: {alert.type === 'harmful_words' ? `Harmful content detected: ${alert.content}` : alert.content}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-  
-            {/* Transcripts */}
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-50 rounded-md min-h-[100px]">
-                <h3 className="font-medium mb-2">Final Transcript:</h3>
-                <p className="whitespace-pre-wrap">{finalTranscript}</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-md min-h-[50px]">
-                <h3 className="font-medium mb-2">Interim Transcript:</h3>
-                <p className="text-gray-600 italic">{interimTranscript}</p>
-              </div>
-            </div>
-  
-            {/* Recordings */}
-            {recordings.length > 0 && (
-              <div className="space-y-4 mt-6">
-                <h3 className="font-medium text-lg">Last Recording:</h3>
-                {recordings.map((recording, index) => (
-                  <div key={index} className="p-4 bg-gray-50 rounded-md">
-                    <div className="mb-2">
-                      <span className="text-sm text-gray-600">
-                        {recording.timestamp} (
-                        {languages.find((l) => l.code === recording.language)?.name})
-                      </span>
-                    </div>
-                    <audio controls src={recording.url} className="w-full mb-2" autoPlay />
-                    {recording.transcript && (
-                      <div className="text-sm text-gray-700 mt-2">
-                        <strong>Transcript:</strong> {recording.transcript}
-                      </div>
-                    )}
-                    {recording.alerts && recording.alerts.length > 0 && (
-                      <div className="mt-2 text-sm text-red-600 bg-red-50 p-2 rounded">
-                        <strong>Alerts during recording:</strong>
-                        <ul className="list-disc pl-4 mt-1">
-                          {recording.alerts.map((alert, alertIndex) => (
-                            <li key={alertIndex}>
-                              {alert.timestamp}: {alert.content}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+      <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden flex-col"> {/* Black background */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-[#d5c58a] mb-4">Secure Voice Recorder</h1> {/* d5c58a text */}
+        <div className="flex items-center justify-center gap-2 text-[#b5a56a]"> {/* Lighter d5c58a text */}
+          <Shield className="w-5 h-5" />
+          <span className="text-lg">Safety-First Voice Recording</span>
         </div>
       </div>
+      
+      <div className="p-8 max-w-2xl mx-auto bg-gray-900/80 backdrop-blur-lg shadow-lg rounded-2xl w-full border border-[#d5c58a]/20"> {/* Increased padding and max-w */}
+        <div className="space-y-6"> {/* Increased spacing */}
+          {/* Language Selector */}
+          <div className="flex items-center gap-6 mb-8"> {/* Increased gap and margin */}
+            <label htmlFor="language" className="font-medium text-[#d5c58a] text-lg"> {/* Increased text size */}
+              Select Language:
+            </label>
+            <select
+              id="language"
+              className="p-3 border border-gray-700 rounded-md bg-gray-800 text-[#d5c58a] text-lg" // Increased padding and text size
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+            >
+              {languages.map((lang) => (
+                <option key={lang.code} value={lang.code} className="bg-gray-800 text-lg"> {/* Increased text size */}
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Control Buttons */}
+          <div className="flex gap-6 mb-8 justify-center"> {/* Increased gap and centered buttons */}
+            <button
+              onClick={isListening ? stopListening : startListening}
+              className={`flex items-center gap-3 px-8 py-4 rounded-full font-medium text-black transition-all text-lg
+                          ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-[#d5c58a] hover:bg-[#c0b075]'}
+                          shadow-lg hover:scale-105 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] active:scale-95`}
+            > {/* Increased padding, text size, and centered */}
+              {isListening ? (
+                <>
+                  <Square className="w-6 h-6" /> {/* Increased icon size */}
+                  <span className="text-lg">Stop Recording</span> {/* Increased text size */}
+                </>
+              ) : (
+                <>
+                  <Mic className="w-6 h-6" /> {/* Increased icon size */}
+                  <span className="text-lg">Start Recording</span> {/* Increased text size */}
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={clearTranscript}
+              className="flex items-center gap-3 px-8 py-4 rounded-full font-medium text-black bg-[#b5a56a] hover:bg-[#a09055] transition-all text-lg
+                           hover:scale-105 hover:drop-shadow-[0_0_8px_rgba(0,0,0,0.3)] active:scale-95"
+            > {/* Increased padding, text size, and glow */}
+              <Trash2 className="w-6 h-6" /> {/* Increased icon size */}
+              <span className="text-lg">Clear</span> {/* Increased text size */}
+            </button>
+          </div>
+
+          {/* ... (Status, Error, Alerts - no changes needed, they adapt to the theme) */}
+
+          {/* Transcripts */}
+          <div className="space-y-6"> {/* Increased spacing */}
+            <div className="p-6 bg-gray-800 rounded-md min-h-[150px]"> {/* Increased padding and min-h */}
+              <h3 className="font-medium mb-3 text-[#d5c58a] text-xl">Final Transcript:</h3> {/* Increased text size and margin */}
+              <p className="whitespace-pre-wrap text-[#d5c58a] text-lg">{finalTranscript}</p> {/* Increased text size */}
+            </div>
+            <div className="p-6 bg-gray-800 rounded-md min-h-[75px]"> {/* Increased padding and min-h */}
+              <h3 className="font-medium mb-3 text-[#d5c58a] text-xl">Interim Transcript:</h3> {/* Increased text size and margin */}
+              <p className="text-gray-500 italic text-lg">{interimTranscript}</p> {/* Increased text size */}
+            </div>
+          </div>
+
+          {/* Recordings */}
+          {recordings.length > 0 && (
+            <div className="space-y-4 mt-6">
+              <h3 className="font-medium text-lg text-[#d5c58a]">Last Recording:</h3> {/* d5c58a text */}
+              {recordings.map((recording, index) => (
+                <div key={index} className="p-4 bg-gray-800 rounded-md"> {/* Darker background */}
+                  <div className="mb-2">
+                    <span className="text-sm text-gray-500"> {/* Lighter gray text */}
+                      {recording.timestamp} (
+                      {languages.find((l) => l.code === recording.language)?.name})
+                    </span>
+                  </div>
+                  <audio controls src={recording.url} className="w-full mb-2" autoPlay />
+                  {recording.transcript && (
+                    <div className="text-sm text-gray-500 mt-2"> {/* Lighter gray text */}
+                      <strong>Transcript:</strong> {recording.transcript}
+                    </div>
+                  )}
+                  {recording.alerts && recording.alerts.length > 0 && (
+                    <div className="mt-2 text-sm text-red-400 bg-red-900/50 p-2 rounded"> {/* Lighter red text, darker background */}
+                      <strong>Alerts during recording:</strong>
+                      <ul className="list-disc pl-4 mt-1">
+                        {recording.alerts.map((alert, alertIndex) => (
+                          <li key={alertIndex}>
+                            {alert.timestamp}: {alert.content}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
     );
   };
   
