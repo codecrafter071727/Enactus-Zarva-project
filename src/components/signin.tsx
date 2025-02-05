@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  User, Mail, Lock, Eye, EyeOff, ArrowRight, 
+  User, Mail, Lock, Eye, EyeOff, 
   Phone, Calendar, Sparkles
 } from 'lucide-react';
 

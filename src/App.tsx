@@ -37,7 +37,9 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/speech" element={<Speechrecognisation />} />
             <Route path="/safer-cab/comingsoon" element={<CoolComingSoon />} />
-            <Route path="/s" element={<CoolComingSoon />} />
+            <Route path="/About" element={<About />} />
+            
+            
 
             
           </Routes>
