@@ -3,7 +3,7 @@ import { Shield } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-black text-white py-10">
+    <footer className="bg-gradient-to-br from-[#615839] via-gray-900 to-black text-white py-10">
       <div className="max-w-7xl mx-auto px-12 sm:px-8">
         <div className="grid md:grid-cols-4 gap-40">
           {/* Logo and Brand */}

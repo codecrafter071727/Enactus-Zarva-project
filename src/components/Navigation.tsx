@@ -6,7 +6,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-black px-6 md:px-28 py-4 flex justify-between items-center relative">
+    <nav className="bg-gradient-to-br from-[#615839] via-gray-900 to-black px-6 md:px-28 py-2 flex justify-between items-center relative">
       {/* Left side - Logo and Brand */}
       <div className="flex items-center">
         <svg
