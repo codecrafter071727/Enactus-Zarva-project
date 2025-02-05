@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   return (
@@ -26,14 +27,16 @@ const LandingPage = () => {
               Travel with confidence using our advanced safety features designed to protect you at every step.
             </p>
             <div>
-            <button
-      className={`bg-gradient-to-r from-[#d5c58a] to-black text-white px-6 py-3 rounded-md text-lg font-medium 
-                 hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
-                 hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]  // Very strong glow
-                 hover:backdrop-blur-sm`} // Subtle blur on hover
-    >
-      Get Started
-    </button>
+              <Link to="/signin">
+                <button
+                  className={`bg-gradient-to-r from-[#d5c58a] to-black text-white px-6 py-3 rounded-md text-lg font-medium 
+                            hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
+                            hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]  // Very strong glow
+                            hover:backdrop-blur-sm`} // Subtle blur on hover
+                >
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
         </div>
