@@ -2,10 +2,11 @@ const User = require('../models/user')
 const {setUser} = require('../service/auth')
 
 async function handleUserSignup(req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, phone, password } = req.body;
     await User.create({
         name,
         email,
+        phone,
         password,
     })
     return res.redirect("/main")
