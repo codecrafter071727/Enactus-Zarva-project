@@ -14,146 +14,98 @@ interface RouteData {
   Distance: string;
 }
 
-// More distinctive map style
-const mapStyles = [
-  {
-    elementType: "geometry",
-    stylers: [{ color: "#1d2c4d" }]
-  },
-  {
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#8ec3b9" }]
-  },
-  {
-    elementType: "labels.text.stroke",
-    stylers: [{ color: "#1a3646" }]
-  },
-  {
-    featureType: "administrative.country",
-    elementType: "geometry.stroke",
-    stylers: [{ color: "#4b6878" }]
-  },
-  {
-    featureType: "administrative.land_parcel",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#64779e" }]
-  },
-  {
-    featureType: "administrative.province",
-    elementType: "geometry.stroke",
-    stylers: [{ color: "#4b6878" }]
-  },
-  {
-    featureType: "landscape.man_made",
-    elementType: "geometry.stroke",
-    stylers: [{ color: "#334e87" }]
-  },
-  {
-    featureType: "landscape.natural",
-    elementType: "geometry",
-    stylers: [{ color: "#023e58" }]
-  },
-  {
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [{ color: "#304a7d" }]
-  },
-  {
-    featureType: "road",
-    elementType: "geometry.stroke",
-    stylers: [{ color: "#255763" }]
-  },
-  {
-    featureType: "road",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#98a5be" }]
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry",
-    stylers: [{ color: "#2c6675" }]
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.stroke",
-    stylers: [{ color: "#255763" }]
-  },
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [{ color: "#0e1626" }]
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#4e6d70" }]
-  }
-];
-
-const loadGoogleMapsScript = (callback: () => void) => {
-  const existingScript = document.getElementById("googleMaps");
-  if (!existingScript) {
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDjhuWZztdK2U2wWaGAyvgS5DxTCqi8kmg&libraries=places`;
-    script.id = "googleMaps";
-    document.body.appendChild(script);
-    script.onload = () => {
-      if (callback) callback();
-    };
-  }
-  if (existingScript && callback) callback();
-};
-
-function App() {
+const App = () => {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [routePath, setRoutePath] = useState<google.maps.Polyline | null>(null);
   const [routeInfo, setRouteInfo] = useState<{ duration: string; distance: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const mapRef = useRef(null);
   const [watchId, setWatchId] = useState<number | null>(null);
-  const [Load, setLoad] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const markerRef = useRef<google.maps.Marker | null>(null);
+  const lastPositionRef = useRef<google.maps.LatLng | null>(null);
+  const infoBarRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Google Maps
   useEffect(() => {
+    const scriptId = "googleMapsScript";
     const initializeMap = () => {
-      if (!mapRef.current) return;
+      if (!window.google?.maps?.Map || !mapRef.current) return;
 
-      const mapOptions: google.maps.MapOptions = {
-        center: { lat: 28.6139, lng: 77.2090 },
+      const map = new window.google.maps.Map(mapRef.current, {
+        center: { lat: 28.6139, lng: 77.209 },
         zoom: 12,
         mapTypeId: "roadmap",
-        styles: mapStyles,
-        disableDefaultUI: false,
-        zoomControl: true,
-        mapTypeControl: false, // Disabled to keep interface cleaner
-        scaleControl: true,
-        streetViewControl: false, // Disabled to keep interface cleaner
-        rotateControl: false, // Disabled to keep interface cleaner
-        fullscreenControl: true,
-        backgroundColor: '#1d2c4d' // Match with style background
-      };
+      });
 
-      const map = new window.google.maps.Map(mapRef.current, mapOptions);
+      const marker = new google.maps.Marker({
+        map,
+        icon: getArrowIcon(0),
+        visible: false,
+      });
+
       setMapInstance(map);
+      markerRef.current = marker;
     };
 
-    loadGoogleMapsScript(() => {
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry,places`;
+      script.id = scriptId;
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeMap;
+      document.body.appendChild(script);
+    } else if (window.google?.maps) {
       initializeMap();
-    });
+    }
+
+    return () => {
+      const script = document.getElementById(scriptId);
+      script?.remove();
+    };
   }, []);
 
-  // Fetch safer routes
+  const getArrowIcon = (rotation: number) => ({
+    path: "M 0,-2 L 2,2 L -2,2 Z",
+    scale: 7,
+    fillColor: "#FF0000",
+    fillOpacity: 1,
+    strokeColor: "#000000",
+    strokeWeight: 1,
+    rotation,
+    anchor: new google.maps.Point(0, 0),
+  });
+
   const fetchSaferRoute = async () => {
-    setLoad(true);
-    if (!pickup || !destination) return;
+    let origin = pickup;
+
+    if (!origin) {
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        origin = `${position.coords.latitude},${position.coords.longitude}`;
+        setPickup(origin);
+      } catch {
+        setError("Please allow location access or enter a pickup location.");
+        return;
+      }
+    }
+
+    if (!destination) {
+      setError("Please enter a destination");
+      return;
+    }
 
     try {
-      const response = await axios.post<RouteData>("https://enactus-zarva-project.onrender.com/v1/api/carRoute", {
-        origin: pickup,
-        destination: destination,
-      });
+      setLoading(true);
+      setError(null);
+      const response = await axios.post<RouteData>(
+        "https://enactus-zarva-project.onrender.com/v1/api/carRoute",
+        { origin, destination }
+      );
 
       const data = response.data;
       setRouteInfo({
@@ -163,31 +115,76 @@ function App() {
 
       const routeCoordinates = data.route.map(([lng, lat]) => ({ lat, lng }));
 
-      if (routePath) {
-        routePath.setMap(null);
-      }
+      if (routePath) routePath.setMap(null);
 
       if (mapInstance && routeCoordinates.length > 0) {
         const newRoutePath = new google.maps.Polyline({
           path: routeCoordinates,
           geodesic: true,
-          strokeColor: "#FF850A",
-          strokeOpacity: 1.0,
-          strokeWeight: 4,
+          strokeColor: "#2ecc71",
+          strokeOpacity: 2.0,
+          strokeWeight: 5,
         });
 
         newRoutePath.setMap(mapInstance);
         setRoutePath(newRoutePath);
-        mapInstance.setCenter(routeCoordinates[0]);
-        mapInstance.setZoom(12);
-        setLoad(false);
+
+        // Fit the map to the route
+        const bounds = new google.maps.LatLngBounds();
+        routeCoordinates.forEach(coord => bounds.extend(coord));
+        mapInstance.fitBounds(bounds);
+
+        // Switch to fullscreen
+        if (mapRef.current) {
+          if (mapRef.current.requestFullscreen) {
+            mapRef.current.requestFullscreen();
+          } else if (mapRef.current.webkitRequestFullscreen) { // Safari
+            mapRef.current.webkitRequestFullscreen();
+          } else if (mapRef.current.msRequestFullscreen) { // IE11
+            mapRef.current.msRequestFullscreen();
+          }
+        }
+
+        // Update the info bar with route information
+        if (infoBarRef.current) {
+          infoBarRef.current.innerHTML = `
+            <strong>Route Info</strong><br>
+            Distance: ${data.Distance}<br>
+            Duration: ${data.Duration}
+          `;
+          infoBarRef.current.style.display = 'block'; // Show the info bar
+        }
       }
-    } catch (err) {
-      setError("Failed to fetch safe route. Please try again.");
+    } catch {
+      setError("Failed to fetch safe route. Please check your inputs and try again.");
+      setRouteInfo(null);
+      if (routePath) routePath.setMap(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Live GPS Tracking
+  const handleRecenter = () => {
+    if (routePath && mapInstance) {
+      const path = routePath.getPath();
+      const coordinates = path.getArray();
+      
+      if (coordinates.length > 0) {
+        const startPoint = coordinates[0];
+        const nextPoint = coordinates.length > 1 ? coordinates[1] : startPoint;
+
+        const heading = window.google.maps.geometry.spherical.computeHeading(startPoint, nextPoint);
+
+        mapInstance.setOptions({
+          center: startPoint,
+          zoom: 16,
+          heading: heading,
+          tilt: 45,
+        });
+      }
+    }
+  };
+
   const toggleLiveTracking = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
@@ -197,16 +194,30 @@ function App() {
     if (watchId) {
       navigator.geolocation.clearWatch(watchId);
       setWatchId(null);
+      if (markerRef.current) markerRef.current.setVisible(false);
     } else {
       const id = navigator.geolocation.watchPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
-          setPickup(`${latitude},${longitude}`);
-          if (mapInstance) {
-            const newCenter = new google.maps.LatLng(latitude, longitude);
-            mapInstance.setCenter(newCenter);
-            mapInstance.setZoom(16);
+          const { latitude, longitude, heading, speed } = position.coords;
+          const newPos = new google.maps.LatLng(latitude, longitude);
+
+          let rotationAngle = markerRef.current?.getIcon()?.rotation || 0;
+
+          if (speed > 0.5 && typeof heading === "number" && !isNaN(heading)) {
+            rotationAngle = heading;
+          } else if (lastPositionRef.current && !newPos.equals(lastPositionRef.current)) {
+            rotationAngle = google.maps.geometry.spherical.computeHeading(lastPositionRef.current, newPos);
           }
+
+          if (markerRef.current) {
+            markerRef.current.setIcon(getArrowIcon(rotationAngle));
+            markerRef.current.setPosition(newPos);
+            markerRef.current.setVisible(true);
+          }
+
+          if (mapInstance) mapInstance.panTo(newPos);
+          lastPositionRef.current = newPos;
+          setPickup(`${latitude},${longitude}`);
         },
         (error) => {
           console.error("Error fetching location:", error);
@@ -220,56 +231,112 @@ function App() {
 
   return (
     <div
-    className="min-h-screen py-8"
-    style={{
-      background: "linear-gradient(45deg, #4A4A29, #9C9A6A, #B5B1A8, #2E3A47)",
-      backgroundSize: "400% 400%",
-      animation: "gradient-x 15s ease infinite",
-    }}
+      className="min-h-screen py-8"
+      style={{
+        background: "linear-gradient(45deg, #4A4A29, #9C9A6A, #B5B1A8, #2E3A47)",
+        backgroundSize: "400% 400%",
+        animation: "gradient-x 15s ease infinite",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 text-white">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-gray-900/80 p-8 rounded-xl">
           <h2 className="text-3xl font-bold text-[#d5c58a] mb-8">Find Safer Routes</h2>
+
           <button
             onClick={toggleLiveTracking}
-            className="mb-4 w-full bg-blue-600 text-white py-2 px-4 rounded"
+            className="mb-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors"
           >
             {watchId ? "Stop Live Tracking" : "Start Live Tracking"}
           </button>
-          <div className="mb-6">
+
+          <div className="mb-6 text-white">
             <label className="block text-lg mb-2">Pickup Location</label>
-            <input
-              type="text"
-              value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
-              className="w-full p-4 border rounded bg-gray-800 text-[#d5c58a]"
-              placeholder="Enter pickup location"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={pickup}
+                onChange={(e) => setPickup(e.target.value)}
+                className="w-full p-4 border rounded bg-gray-800 text-[#d5c58a] focus:outline-none focus:ring-2 focus:ring-[#d5c58a]"
+                placeholder="Enter pickup or use current location"
+              />
+              <button
+                onClick={async () => {
+                  try {
+                    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                      navigator.geolocation.getCurrentPosition(resolve, reject);
+                    });
+                    setPickup(`${position.coords.latitude},${position.coords.longitude}`);
+                  } catch {
+                    setError("Could not get your current location. Please allow location access.");
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+                title="Use current location"
+              >
+                📍
+              </button>
+            </div>
           </div>
-          <div className="mb-6">
+
+          <div className="mb-6 text-white">
             <label className="block text-lg mb-2">Destination</label>
             <input
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="w-full p-4 border rounded bg-gray-800 text-[#d5c58a]"
+              className="w-full p-4 border rounded bg-gray-800 text-[#d5c58a] focus:outline-none focus:ring-2 focus:ring-[#d5c58a]"
               placeholder="Enter destination"
             />
           </div>
+
           <button
             onClick={fetchSaferRoute}
-            className="w-full bg-green-600 text-white py-2 px-4 rounded"
+            disabled={loading}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Find Route
+            {loading ? "Searching..." : "Find Route"}
           </button>
-          <h1 className="text-2xl text-white text-center py-2">{Load? "Loading,,," : ""}</h1>
+
+          {error && (
+            <div className="mt-4 p-3 bg-red-800/50 text-red-300 rounded-lg flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              {error}
+            </div>
+          )}
         </div>
-        <div className="relative h-96">
+
+        <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
           <div ref={mapRef} className="w-full h-full"></div>
+          <div
+            ref={infoBarRef}
+            className="absolute bottom-0 left-0 right-0 bg-gray-800 text-white p-4 text-center"
+            style={{ display: 'none' }} // Hidden by default, show when route is found
+          ></div>
+          <button
+            onClick={handleRecenter}
+            className="absolute top-2 right-2 bg-white/90 hover:bg-white text-gray-800 px-3 py-2 rounded-md shadow-md transition-colors flex items-center gap-1"
+            title="Recenter map to route start"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4 4a2 2 0 012-2h4a1 1 0 010 2H6v10h4a1 1 0 110 2H6a2 2 0 01-2-2V4zm12 6a1 1 0 011 1v3a2 2 0 01-2 2h-4a1 1 0 110-2h4V8h-4a1 1 0 110-2h4a2 2 0 012 2v3a1 1 0 01-1 1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Recenter
+          </button>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;
