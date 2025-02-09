@@ -51,7 +51,7 @@ const App = () => {
 
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry,places`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDjhuWZztdK2U2wWaGAyvgS5DxTCqi8kmg&libraries=geometry,places`;
       script.id = scriptId;
       script.async = true;
       script.defer = true;
