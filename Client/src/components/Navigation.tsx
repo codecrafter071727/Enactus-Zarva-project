@@ -12,12 +12,8 @@ const Navbar = () => {
       {/* Left side - Logo and Brand */}
       <div className="flex items-center">
         {/* Placeholder for Logo Image */}
-        <img 
-          src="https://drive.google.com/file/d/1_OXtOTnMv3XHmVfMb7SIn-OBOakZfg71/view?usp=sharing"  // Update the path to your logo image
-          alt="Logo"
-          className="w-8 h-8" // Adjust the size as needed
-        />
-        <span className="text-white text-2xl font-semibold ml-3">Zarva07</span>
+        
+        <span className="text-white text-2xl font-semibold ml-3">Zarva</span>
       </div>
 
       {/* Mobile Menu Button */}
@@ -31,7 +27,7 @@ const Navbar = () => {
 
       {/* Right side - Authentication Buttons */}
       <div
-        className={`absolute md:static top-16 left-0 w-full md:w-auto bg-black md:bg-transparent flex flex-col md:flex-row md:items-center gap-9 p-4 md:p-0 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 md:opacity-100 md:translate-y-0'}`}
+        className={`absolute md:static top-16 left-4 w-full md:w-auto bg-black md:bg-transparent flex flex-col md:flex-row md:items-center gap-9 p-6 md:p-0 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 md:opacity-100 md:translate-y-0'}`}
       >
         <Link to="/" className="text-white hover:text-gray-300 text-base font-medium">
           Home

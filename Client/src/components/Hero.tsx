@@ -23,12 +23,10 @@ const LandingPage: React.FC = () => {
         {/* Content */}
         <div className="relative h-full flex flex-col justify-center px-6">
           <div className="max-w-2xl space-y-6">
-            <h1 className="text-3xl font-extrabold text-white mb-3 leading-tight">
-              Your Safety Companion for Every Journey
+            <h1 className="text-4xl font-extrabold text-white mb-3 leading-tight">
+              Redefining Travel safety 
             </h1>
-            <p className="text-lg text-white mb-5 leading-relaxed">
-            Welcome to the beta version of Zarva ! , designed to enhance your travel safety and security.
-            </p>
+            
             <div className="pt-2">
               {/* Show Sign-In button when user is not signed in */}
               <SignedOut>
@@ -53,6 +51,10 @@ const LandingPage: React.FC = () => {
                 >
                   Features
                 </button>
+                <p className="text-sm text-white my-8 leading-relaxed">
+            * This is the Beta version of the App.
+            <p> Finall version launch at AUGUST 2025. </p>
+            </p>
               </SignedIn>
             </div>
           </div>
