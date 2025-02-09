@@ -52,9 +52,9 @@ const LandingPage: React.FC = () => {
                   Features
                 </button>
                 <p className="text-sm text-white my-8 leading-relaxed">
-            * This is the Beta version of the App.
-            <p> Finall version launch at AUGUST 2025. </p>
-            </p>
+                 *This is the Beta version of the App.
+                <p> Finall version launch in AUGUST  </p>
+                </p>
               </SignedIn>
             </div>
           </div>
