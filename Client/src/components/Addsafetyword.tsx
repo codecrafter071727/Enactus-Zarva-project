@@ -69,14 +69,14 @@ export default function RestrictedWordsInput() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter a word..."
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-[#d5c58a] focus:border-[#d5c58a] text-black"
           />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors"
+          className="w-full bg-[#d5c58a] text-white p-2 rounded hover:bg-[#7a6f47] transition-colors"
         >
           Save Word
         </button>

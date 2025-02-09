@@ -63,6 +63,20 @@ const Features = () => {
           </Link>
         ))}
       </div>
+
+              {/* Feedback Form Button */}
+              <div className="animate-fade-in animation-delay-600 mt-8 md:mt-12">
+          <a
+            href="https://forms.gle/jnvjHjmR1eQ6ZU8SA"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-6 md:px-8 py-2 md:py-3 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 text-[#d5c58a] text-sm md:text-base border border-[#d5c58a]/30 hover:border-[#d5c58a] transition-all duration-500 hover:scale-105 transform-gpu"
+          >
+            Share Your Feedback
+          </a>
+        </div>
+      
+
     </section>
   );
 };

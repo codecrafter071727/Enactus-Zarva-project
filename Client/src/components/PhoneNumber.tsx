@@ -41,7 +41,7 @@ const PhoneNumberForm = () => {
             placeholder="+91**********"
             value={toNumber}
             onChange={(e) => setToNumber(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d5c58a] focus:border-[#d5c58a]"
             pattern="^\+?[1-9]\d{1,14}$"
             required
           />
@@ -60,7 +60,7 @@ const PhoneNumberForm = () => {
             placeholder="+91**********"
             value={toNumber1}
             onChange={(e) => setToNumber1(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d5c58a] focus:border-[#d5c58a]"
             pattern="^\+?[1-9]\d{1,14}$"
             required
           />
@@ -68,7 +68,7 @@ const PhoneNumberForm = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+          className="w-full bg-[#d5c58a] text-white py-2 px-4 rounded-md hover:bg-[#6f6540] focus:outline-none focus:ring-2 focus:ring-[#d5c58a] focus:ring-offset-2 transition-colors duration-200"
         >
           Save Numbers
         </button>

@@ -231,12 +231,8 @@ const App = () => {
 
   return (
     <div
-      className="min-h-screen py-8"
-      style={{
-        background: "linear-gradient(45deg, #4A4A29, #9C9A6A, #B5B1A8, #2E3A47)",
-        backgroundSize: "400% 400%",
-        animation: "gradient-x 15s ease infinite",
-      }}
+      className="min-h-screen py-8 bg-gradient-to-br from-[#615839] via-gray-900 to-[#736638] "
+      
     >
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-gray-900/80 p-8 rounded-xl">
@@ -244,7 +240,7 @@ const App = () => {
 
           <button
             onClick={toggleLiveTracking}
-            className="mb-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition-colors"
+            className="mb-4 w-full bg-[#988b5e] hover:bg-[#60583c] text-white py-2 px-4 rounded transition-colors"
           >
             {watchId ? "Stop Live Tracking" : "Start Live Tracking"}
           </button>
@@ -270,7 +266,7 @@ const App = () => {
                     setError("Could not get your current location. Please allow location access.");
                   }
                 }}
-                className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-[#7b724f] rounded hover:bg-[#554d32] transition-colors"
                 title="Use current location"
               >
                 📍
@@ -292,7 +288,7 @@ const App = () => {
           <button
             onClick={fetchSaferRoute}
             disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#6a5c29] hover:bg-[#584e2c] text-white py-2 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Searching..." : "Find Route"}
           </button>

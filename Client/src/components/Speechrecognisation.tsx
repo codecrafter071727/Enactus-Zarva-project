@@ -584,12 +584,9 @@ const checkHarmfulContent = useCallback((text, options = { checkSpeech: false })
   const toggleComponent = (component) => {
     setActiveComponent(activeComponent === component ? null : component);
   };
+  
   return (
-    <div className="min-h-screen p-4 overflow-x-hidden" style={{
-      background: "linear-gradient(45deg, #4A4A29, #9C9A6A, #B5B1A8, #2E3A47)",
-      backgroundSize: "400% 400%",
-      animation: "gradient-x 15s ease infinite",
-    }} >
+    <div className="min-h-screen p-4 overflow-x-hidden bg-gradient-to-br from-[#615839] via-gray-900 to-[#736638] "  >
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column - Settings */}
         <div className="w-full flex justify-center items-center flex-col">
@@ -624,7 +621,7 @@ const checkHarmfulContent = useCallback((text, options = { checkSpeech: false })
               <h1 className="text-2xl md:text-4xl font-bold text-white mb-4">
                 Secure Voice Recorder
               </h1>
-              <div className="flex items-center justify-center gap-2 text-indigo-600">
+              <div className="flex items-center justify-center gap-2 text-[#b0a26d]">
                 <Shield className="w-4 h-4 md:w-5 md:h-5" />
                 <span className="text-base md:text-lg">Safety-First Voice Recording</span>
               </div>
@@ -632,12 +629,12 @@ const checkHarmfulContent = useCallback((text, options = { checkSpeech: false })
 
             {/* Language Selector */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-6">
-              <label htmlFor="language" className="font-medium text-white">
+              <label htmlFor="language" className="font-medium text-[#e3d39b]">
                 Select Language:
               </label>
               <select
                 id="language"
-                className="w-full sm:w-auto p-2 border rounded-md bg-white"
+                className="w-full sm:w-auto p-2 border rounded-md bg-black text-[#776d47]"
                 value={selectedLanguage}
                 onChange={(e) => setSelectedLanguage(e.target.value)}
               >
@@ -656,25 +653,25 @@ const checkHarmfulContent = useCallback((text, options = { checkSpeech: false })
                 className={`flex items-center justify-center gap-2 px-4 py-3 rounded-full font-medium text-white transition-all w-full sm:w-auto ${
                   isListening
                     ? "bg-red-500 hover:bg-red-600"
-                    : "bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-[#665c3b] hover:bg-[#d5c58a]"
                 } shadow-lg hover:scale-105`}
               >
                 {isListening ? (
                   <>
                     <Square className="w-4 h-4 md:w-5 md:h-5" />
-                    Stop Recording
+                   Recording
                   </>
                 ) : (
                   <>
                     <Mic className="w-4 h-4 md:w-5 md:h-5" />
-                    Start Recording
+                    Recording
                   </>
                 )}
               </button>
 
               <button
                 onClick={clearTranscript}
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-full font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 px-4 py-3 rounded-full font-medium text-gray-100 bg-gray-700 hover:bg-gray-700 transition-all w-full sm:w-auto"
               >
                 <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                 Clear

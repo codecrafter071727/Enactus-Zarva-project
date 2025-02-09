@@ -27,13 +27,16 @@ const LandingPage: React.FC = () => {
               Your Safety Companion for Every Journey
             </h1>
             <p className="text-lg text-white mb-5 leading-relaxed">
-              Travel with confidence using our advanced safety features designed to protect you at every step.
+            Welcome to the beta version of Zarva ! , designed to enhance your travel safety and security.
             </p>
             <div className="pt-2">
               {/* Show Sign-In button when user is not signed in */}
               <SignedOut>
                 <SignInButton mode="redirect" redirectUrl="/features">
-                  <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg">
+                  <button className={`bg-gradient-to-r from-[#d5c58a] to-black text-white px-6 py-3 rounded-md text-lg font-medium 
+                            hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
+                            hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]  // Very strong glow
+                            hover:backdrop-blur-sm`} >
                     Sign In
                   </button>
                 </SignInButton>
@@ -43,7 +46,10 @@ const LandingPage: React.FC = () => {
               <SignedIn>
                 <button 
                   onClick={() => navigate('/features')} 
-                  className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg"
+                  className={`bg-gradient-to-r from-[#d5c58a] to-black text-white px-6 py-3 rounded-md text-lg font-medium 
+                            hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
+                            hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]  // Very strong glow
+                            hover:backdrop-blur-sm`} // Subtle blur on hover
                 >
                   Features
                 </button>
