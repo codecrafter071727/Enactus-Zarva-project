@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Car, Mic, Send } from 'lucide-react';
+import { Car, Mic, Send, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const features = [
@@ -35,7 +35,17 @@ const Features = () => {
   }, []);
 
   return (
-    <section className="h-screen flex flex-col bg-[#0a0a02] px-4 py-6">
+    <section className="h-screen flex flex-col bg-[#0a0a02] px-4 py-6 relative">
+      {/* Info Button */}
+      <a
+        href="https://youtube.com/your-video-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute top-6 right-6 w-10 h-10 bg-[#1c2536] rounded-full flex items-center justify-center hover:bg-[#2a3649] transition-colors duration-300"
+      >
+        <Info className="w-5 h-5 text-[#d5c58a]" />
+      </a>
+
       {/* Header */}
       <div className="text-center mb-4">
         <h2 className="text-white text-2xl font-bold">Advanced Safety Features</h2>
@@ -64,19 +74,17 @@ const Features = () => {
         ))}
       </div>
 
-              {/* Feedback Form Button */}
-              <div className="animate-fade-in animation-delay-600 mt-8 md:mt-12">
-          <a
-            href="https://forms.gle/jnvjHjmR1eQ6ZU8SA"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-6 md:px-8 py-2 md:py-3 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 text-[#d5c58a] text-sm md:text-base border border-[#d5c58a]/30 hover:border-[#d5c58a] transition-all duration-500 hover:scale-105 transform-gpu"
-          >
-            Share Your Feedback
-          </a>
-        </div>
-      
-
+      {/* Feedback Form Button */}
+      <div className="animate-fade-in animation-delay-600 mt-8 md:mt-12">
+        <a
+          href="https://forms.gle/jnvjHjmR1eQ6ZU8SA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-6 md:px-8 py-2 md:py-3 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 text-[#d5c58a] text-sm md:text-base border border-[#d5c58a]/30 hover:border-[#d5c58a] transition-all duration-500 hover:scale-105 transform-gpu"
+        >
+          Share Your Feedback
+        </a>
+      </div>
     </section>
   );
 };
