@@ -112,7 +112,7 @@ const SpeechRecognition = () => {
   const initiateCall = async (newmessage) => {
     try {
       
-      const response = await fetch("http://localhost:5000/api/twilio-call", {
+      const response = await fetch("https://enactus-zarva-project-1.onrender.com/api/twilio-call", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const SpeechRecognition = () => {
   const initiateCall1 = async (newmessage) => {
     try {
       
-      const response = await fetch("http://localhost:5000/api/twilio-call", {
+      const response = await fetch("https://enactus-zarva-project-1.onrender.com/api/twilio-call", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const SpeechRecognition = () => {
   const initiatemessage = async (newmessage) => {
     try {
       console.log(toNumber);
-      const response = await fetch("http://localhost:5000/api/twilio-message", {
+      const response = await fetch("https://enactus-zarva-project-1.onrender.com/api/twilio-message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +175,7 @@ const SpeechRecognition = () => {
   const initiatemessage1 = async (newmessage) => {
     try {
       console.log(toNumber1);
-      const response = await fetch("http://localhost:5000/api/twilio-message", {
+      const response = await fetch("https://enactus-zarva-project-1.onrender.com/api/twilio-message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

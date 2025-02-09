@@ -13,7 +13,7 @@ const Navbar = () => {
       <div className="flex items-center">
         {/* Placeholder for Logo Image */}
         <img 
-          src="path/to/your/logo.png"  // Update the path to your logo image
+          src="https://drive.google.com/file/d/1_OXtOTnMv3XHmVfMb7SIn-OBOakZfg71/view?usp=sharing"  // Update the path to your logo image
           alt="Logo"
           className="w-8 h-8" // Adjust the size as needed
         />

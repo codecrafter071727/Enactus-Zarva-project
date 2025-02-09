@@ -60,54 +60,76 @@ app.post('/api/twilio-message', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-const whatsappFromNumber = 'whatsapp:+18314806294';
-app.post("/api/twilio-send-whatsappmessage", async (req, res) => {
-  const { to, whatsappmessage } = req.body;
 
-  if (!to || !whatsappmessage) {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'Missing required parameters: to and whatsappmessage' 
-    });
-  }
 
+
+
+
+// Route: Send OTP
+app.post("/api/twilio-send-otp", async (req, res) => {
   try {
-    // Format the recipient's number for WhatsApp
-    const whatsappTo = `whatsapp:${to}`; // Format: whatsapp:+1234567890
+    const { phone } = req.body;
 
-    // Log the numbers being used (for debugging)
-    console.log('Sending from:', whatsappFromNumber);
-    console.log('Sending to:', whatsappTo);
+    // Validate phone number
+    if (!phone) {
+      return res.status(400).json({ error: "Phone number is required" });
+    }
 
-    const response = await client.messages.create({
-      from: whatsappFromNumber, // Use the sandbox number
-      to: whatsappTo,
-      body: whatsappmessage
-    });
+    // Request OTP via Twilio Verify
+    const verification = await client.verify.v2
+      .services(process.env.TWILIO_VERIFY_SID)
+      .verifications.create({ 
+        to: phone, 
+        channel: "sms" 
+      });
 
-    console.log('WhatsApp message sent successfully:', response.sid);
     res.json({ 
-      success: true, 
-      messageSid: response.sid,
-      status: response.status
-    });
-  } catch (error) {
-    console.error('Detailed error:', {
-      status: error.status,
-      code: error.code,
-      message: error.message,
-      moreInfo: error.moreInfo
+      message: "OTP Sent", 
+      sid: verification.sid 
     });
 
-    res.status(500).json({ 
-      success: false, 
-      error: error.message,
-      code: error.code,
-      moreInfo: error.moreInfo
-    });
+  } catch (error) {
+    console.error("OTP Send Error:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
+// Route: Verify OTP
+app.post("/api/twilio-verify-otp", async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+
+    // Validate input
+    if (!phone || !otp) {
+      return res.status(400).json({ error: "Phone number and OTP are required" });
+    }
+
+    // Check OTP via Twilio Verify
+    const verificationCheck = await client.verify.v2
+      .services(process.env.TWILIO_VERIFY_SID)
+      .verification_checks.create({ 
+        to: phone, 
+        code: otp 
+      });
+
+    // Determine verification status
+    if (verificationCheck.status === "approved") {
+      res.json({ 
+        message: "OTP Verified", 
+        verified: true 
+      });
+    } else {
+      res.status(400).json({ 
+        error: "Invalid OTP", 
+        verified: false 
+      });
+    }
+
+  } catch (error) {
+    console.error("OTP Verification Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
