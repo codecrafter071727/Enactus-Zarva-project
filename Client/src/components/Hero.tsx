@@ -7,11 +7,11 @@ const LandingPage = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    // ... (keeping the existing canvas and particle logic unchanged)
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     
-    // Set canvas size
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -20,7 +20,6 @@ const LandingPage = () => {
     setCanvasSize();
     window.addEventListener('resize', setCanvasSize);
 
-    // Particle class
     class Particle {
       constructor() {
         this.reset();
@@ -57,10 +56,8 @@ const LandingPage = () => {
       }
     }
 
-    // Create particles
     const particles = Array(100).fill().map(() => new Particle());
 
-    // Animation loop
     const animate = () => {
       ctx.fillStyle = 'rgba(10, 10, 2, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -82,7 +79,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen overflow-hidden fixed">
+    <div className="relative h-screen w-full overflow-hidden">
       {/* Canvas Background */}
       <canvas
         ref={canvasRef}
@@ -96,37 +93,40 @@ const LandingPage = () => {
       </div>
 
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-center px-6">
-        <div className="max-w-2xl space-y-6 backdrop-blur-sm p-8 rounded-lg bg-black/20">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3 leading-tight animate-fade-in">
+      <div className="relative h-full flex flex-col justify-start pt-32 md:pt-40 pl-6 md:pl-12">
+        <div className="space-y-8 backdrop-blur-sm p-6 rounded-lg bg-black/0">
+          <h1 className="text-6xl md:text-6xl font-extrabold text-white leading-tight animate-fade-in transform translate-x-0 transition-transform duration-1000 ease-out max-w-6xl">
             Redefining Travel Safety
+            
           </h1>
 
-          <div className="pt-2">
-            <SignedOut>
-              <SignInButton mode="redirect" redirectUrl="/features">
-                <button className="bg-gradient-to-r from-[#d5c58a] to-black text-white px-6 py-3 rounded-md text-lg font-medium
-                                 hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
-                                 hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]
-                                 hover:backdrop-blur-sm">
-                  Get Started
+          <div className="space-y-10">
+            <div className="pt-5">
+              <SignedOut>
+                <SignInButton mode="redirect" redirectUrl="/features">
+                  <button className="bg-gradient-to-r from-[#d5c58a] to-black text-white px-8 py-4 rounded-md text-xl font-medium
+                                   hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
+                                   hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]
+                                   hover:backdrop-blur-sm">
+                    Get Started
+                  </button>
+                </SignInButton>
+              </SignedOut>
+
+              <SignedIn>
+                <button
+                  onClick={() => navigate('/features')}
+                  className="bg-gradient-to-r from-[#d5c58a] to-black text-white px-8 py-4 rounded-md text-xl font-medium
+                           hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
+                           hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]
+                           hover:backdrop-blur-sm"
+                >
+                  Features
                 </button>
-              </SignInButton>
-            </SignedOut>
+              </SignedIn>
+            </div>
 
-            <SignedIn>
-              <button
-                onClick={() => navigate('/features')}
-                className="bg-gradient-to-r from-[#d5c58a] to-black text-white px-6 py-3 rounded-md text-lg font-medium
-                         hover:scale-105 hover:shadow-md active:scale-95 transition-all duration-300
-                         hover:drop-shadow-[0_0_20px_rgba(213,197,138,0.8)]
-                         hover:backdrop-blur-sm"
-              >
-                Features
-              </button>
-            </SignedIn>
-
-            <div className="text-sm text-white/90 mt-8 space-y-2">
+            <div className="text-lg text-white/90 space-y-3">
               <p className="leading-relaxed">*This is the Beta version of the App.</p>
               <p className="leading-relaxed">Final version launch in AUGUST</p>
             </div>

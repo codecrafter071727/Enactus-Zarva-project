@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
@@ -13,44 +12,41 @@ import { Analytics } from "@vercel/analytics/react";
 import CoolComingSoon from './components/comingsoon';
 
 function App() {
-  const [isMobileApp, setIsMobileApp] = useState(false);
-
-  useEffect(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    setIsMobileApp(isStandalone || isMobile);
-  }, []);
-
   return (
     <Router>
-      <div className={`min-h-screen bg-gradient-to-br from-[#d5c58a] via-gray-800 to-black ${isMobileApp ? 'h-screen' : ''}`}>
+      <div className="min-h-screen bg-gradient-to-br from-[#d5c58a] via-gray-800 to-black">
         <Navigation />
-        <main className={isMobileApp ? 'h-[calc(100vh-64px)]' : ''}>
+        <main>
           <Routes>
+            {/* Home page with all sections */}
             <Route
               path="/"
               element={
                 <>
-                  <Hero />
-                  {!isMobileApp && (
-                    <>
-                      <About />
-                      <Contact />
-                    </>
-                  )}
+                  <section className="relative">
+                    <Hero />
+                  </section>
+                  <section className="relative mt-8">
+                    <About />
+                  </section>
+                  <section className="relative mt-8">
+                    <Contact />
+                  </section>
                 </>
               }
             />
             
+            {/* Individual routes for other pages */}
             <Route path="/safer-location" element={<SaferLocation />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/speech" element={<Speechrecognisation />} />
-            <Route path="comingsoon" element={<CoolComingSoon />} />
+            <Route path="/comingsoon" element={<CoolComingSoon />} />
             <Route path="/features" element={<Features />} />
-            {!isMobileApp && <Route path="/About" element={<About />} />}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>
-        {!isMobileApp && <Footer />}
+        <Footer />
         <Analytics />
       </div>
     </Router>
