@@ -8,7 +8,7 @@ const features = [
     title: 'Safer Cabs',
     description: 'Verified drivers and real-time tracking.',
     icon: Car,
-    link: '/safer-cab'
+    link: '/comingsoon'
   },
   {
     id: 'voice',

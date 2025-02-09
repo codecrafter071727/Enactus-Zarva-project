@@ -6,7 +6,7 @@ import Features from './components/Features';
 import { About } from './components/About';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
-import SaferCab from './components/SaferCab';
+
 import SaferLocation from './components/SaferLocation';
 import Signin from './components/signin';
 import Speechrecognisation from './components/Speechrecognisation';
@@ -55,11 +55,11 @@ function App() {
                 </>
               }
             />
-            <Route path="/safer-cab" element={<SaferCab />} />
+            
             <Route path="/safer-location" element={<SaferLocation />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/speech" element={<Speechrecognisation />} />
-            <Route path="/safer-cab/comingsoon" element={<CoolComingSoon />} />
+            <Route path="comingsoon" element={<CoolComingSoon />} />
             <Route path="/features" element={<Features />} />
             {!isMobileApp && <Route path="/About" element={<About />} />}
           </Routes>
