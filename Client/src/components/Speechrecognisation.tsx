@@ -420,12 +420,14 @@ const checkHarmfulContent = useCallback((text, options = { checkSpeech: false })
     const recognition = createSpeechRecognition();
     const phoneNumber = localStorage.getItem("phone");
     if (!phoneNumber) {
-      setError("Please enter an emergency contact phone number before starting the recording.");
+      setError("Please enter a Safe words and loved one's contact phone number before starting the recording.");
+      toggleComponent("phone")
       return;
     }
     const phoneNumber1 = localStorage.getItem("phone1");
     if (!phoneNumber1) {
       setError("Please enter an emergency contact phone number before starting the recording.");
+      toggleComponent("phone")
       return;
     }
     if (!recognition) {
@@ -596,14 +598,14 @@ const checkHarmfulContent = useCallback((text, options = { checkSpeech: false })
           className={`px-4 py-2 rounded-lg font-medium transition-colors bg-gradient-to-t from-gray-700 to-black shadow-xl text-white hover:bg-blue-600 
             ${activeComponent === "restricted" ? "bg-blue-500" : ""}`}
         >
-          Show Restricted Words
+          Add Safe Words
         </button>
         <button
           onClick={() => toggleComponent("phone")}
           className={`px-4 py-2 rounded-lg font-medium transition-colors bg-gradient-to-t from-gray-700 to-black shadow-xl text-white hover:bg-blue-600 
             ${activeComponent === "phone" ? "bg-blue-500" : ""}`}
         >
-          Show Phone Form
+          Add loved One's Number
         </button>
       </div>
 

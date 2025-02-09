@@ -69,7 +69,7 @@ const ComingSoonLuxury = () => {
             className="inline-block bg-gradient-to-r from-[#d0c085] to-[#c0b075] text-black py-3 md:py-4 px-8 md:px-12 rounded-full text-sm md:text-lg font-medium transition-all duration-500 hover:scale-105 active:scale-95 hover:shadow-[0_0_40px_20px_rgba(213,197,138,0.3)] transform-gpu"
             onClick={(e) => {
               e.preventDefault();
-              window.open('YOUR_SOCIAL_MEDIA_URL', '_blank');
+              window.open('https://www.instagram.com/zarvaa.in?utm_source=qr&igsh=YmJ4a3FxcHc0dnR3 ');
             }}
           >
             Get Notified

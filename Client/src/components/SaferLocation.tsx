@@ -231,9 +231,7 @@ const App = () => {
 
   return (
     <div
-      className="min-h-screen py-8 bg-gradient-to-br from-[#615839] via-gray-900 to-[#736638] "
-      
-    >
+      className="min-h-screen py-8 bg-gradient-to-br from-[#615839] via-gray-900 to-[#736638] " >
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-gray-900/80 p-8 rounded-xl">
           <h2 className="text-3xl font-bold text-[#d5c58a] mb-8">Find Safer Routes</h2>
