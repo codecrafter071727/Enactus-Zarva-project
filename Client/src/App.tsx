@@ -19,18 +19,6 @@ function App() {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     setIsMobileApp(isStandalone || isMobile);
-
-    // Prevent scrolling on mobile when on home page
-    if (isMobile && window.location.pathname === '/') {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    }
-
-    // Cleanup function to re-enable scrolling when component unmounts
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.documentElement.style.overflow = 'unset';
-    };
   }, []);
 
   return (
@@ -46,7 +34,6 @@ function App() {
                   <Hero />
                   {!isMobileApp && (
                     <>
-                      
                       <About />
                       <Contact />
                     </>
