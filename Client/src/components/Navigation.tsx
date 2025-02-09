@@ -17,7 +17,7 @@ const Navbar = () => {
           alt="Logo"
           className="w-8 h-8" // Adjust the size as needed
         />
-        <span className="text-white text-2xl font-semibold ml-3">Zarva</span>
+        <span className="text-white text-2xl font-semibold ml-3">Zarva07</span>
       </div>
 
       {/* Mobile Menu Button */}
