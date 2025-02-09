@@ -9,11 +9,7 @@ export function Footer() {
           {/* Logo and Brand */}
           <div>
             <div className="flex items-center justify-center sm:justify-start mb-4">
-            <img 
-          src="/assets/logo.jpg" 
-          alt="Zarva Logo" 
-          className="h-10 w-10 rounded-full"
-        />
+            
               <span className="ml-3 text-2xl font-semibold">Zarva</span>
             </div>
             <p className="text-gray-400">Ensuring safe and secure journeys for everyone.</p>

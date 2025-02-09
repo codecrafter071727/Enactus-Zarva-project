@@ -11,11 +11,7 @@ const Navbar = () => {
       {/* Left side - Logo and Brand */}
       <div className="flex items-center rounded=full ">
         {/* Logo Image */}
-        <img 
-          src="/assets/logo.jpg" 
-          alt="Zarva Logo" 
-          className="h-10 w-10 rounded-full"
-        />
+        
         <span className="text-white text-3xl font-semibold ml-3">Zarva</span>
       </div>
 
