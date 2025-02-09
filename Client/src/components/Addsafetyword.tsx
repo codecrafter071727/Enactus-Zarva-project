@@ -1,65 +1,65 @@
 import { useState, useEffect } from "react";
 
 export default function RestrictedWordsInput() {
-  // State for current input and error message
-  const [input, setInput] = useState("");
-  const [error, setError] = useState("");
+    // State for current input and error message
+    const [input, setInput] = useState("");
+    const [error, setError] = useState("");
+    
+    // State for restricted and saved words
+    const [restrictedWords, setRestrictedWords] = useState(() => {
+        // Initialize from localStorage or use default array
+        const saved = localStorage.getItem("restrictedWords");
+        return saved ? JSON.parse(saved) : ["bad", "wrong", "inappropriate"];
+    });
+    
+    const [savedWords, setSavedWords] = useState(() => {
+        // Initialize from localStorage or use empty array
+        const saved = localStorage.getItem("savedWords");
+        return saved ? JSON.parse(saved) : [];
+    });
 
-  // State for restricted and saved words
-  const [restrictedWords] = useState(() => {
-    // Initialize from localStorage or use default array
-    const saved = localStorage.getItem("restrictedWords");
-    return saved ? JSON.parse(saved) : ["bad", "wrong", "inappropriate"];
-  });
+    // Update localStorage whenever restricted or saved words change
+    useEffect(() => {
+        localStorage.setItem("restrictedWords", JSON.stringify(restrictedWords));
+    }, [restrictedWords]);
 
-  const [savedWords, setSavedWords] = useState(() => {
-    // Initialize from localStorage or use empty array
-    const saved = localStorage.getItem("savedWords");
-    return saved ? JSON.parse(saved) : [];
-  });
+    useEffect(() => {
+        localStorage.setItem("savedWords", JSON.stringify(savedWords));
+    }, [savedWords]);
 
-  // Update localStorage whenever restricted or saved words change
-  useEffect(() => {
-    localStorage.setItem("restrictedWords", JSON.stringify(restrictedWords));
-  }, [restrictedWords]);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        // Check if input is empty
+        if (!input.trim()) {
+            setError("Please enter a word");
+            return;
+        }
 
-  useEffect(() => {
-    localStorage.setItem("savedWords", JSON.stringify(savedWords));
-  }, [savedWords]);
+        // Check if word is restricted
+        if (restrictedWords.includes(input.toLowerCase().trim())) {
+            setError(`"${input}" is a restricted word!`);
+            return;
+        }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+        // Check if word is already saved
+        if (savedWords.includes(input.toLowerCase().trim())) {
+            setError(`"${input}" is already saved!`);
+            return;
+        }
 
-    // Check if input is empty
-    if (!input.trim()) {
-      setError("Please enter a word");
-      return;
-    }
+        // Add word to saved words
+        setSavedWords(prev => [...prev, input.toLowerCase().trim()]);
+        setInput("");
+        setError("");
+    };
 
-    // Check if word is restricted
-    if (restrictedWords.includes(input.toLowerCase().trim())) {
-      setError(`"${input}" is a restricted word!`);
-      return;
-    }
+    const removeWord = (wordToRemove) => {
+        setSavedWords(prev => prev.filter(word => word !== wordToRemove));
+    };
 
-    // Check if word is already saved
-    if (savedWords.includes(input.toLowerCase().trim())) {
-      setError(`"${input}" is already saved!`);
-      return;
-    }
-
-    // Add word to saved words
-    setSavedWords((prev) => [...prev, input.toLowerCase().trim()]);
-    setInput("");
-    setError("");
-  };
-
-  const removeWord = (wordToRemove) => {
-    setSavedWords((prev) => prev.filter((word) => word !== wordToRemove));
-  };
-
-  return (
-    <div className="p-6 max-w-md mx-auto bg-white shadow-lg rounded-xl">
+    return (
+        <div className="p-6 max-w-md mx-auto bg-gradient-to-t from-gray-700 to-black shadow-lg rounded-xl text-white">
       <h2 className="text-2xl font-bold mb-4">Word Storage</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,7 +69,7 @@ export default function RestrictedWordsInput() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter a word..."
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
           />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
@@ -92,7 +92,7 @@ export default function RestrictedWordsInput() {
             {savedWords.map((word, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center bg-gray-50 p-2 rounded"
+                className="flex justify-between items-center bg-black p-2 rounded"
               >
                 <span>{word}</span>
                 <button
@@ -109,5 +109,5 @@ export default function RestrictedWordsInput() {
 
       {/* Display restricted words */}
     </div>
-  );
+    );
 }

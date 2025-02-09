@@ -4,17 +4,24 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import RestrictedWordsInput from "./Addsafetyword";
 import PhoneNumberForm from "./PhoneNumber";
 
-import { Mic, Square, Trash2, Shield } from "lucide-react";
-import Otp from "./Otp";
+import {
+  Mic,
+  Square,
+  Trash2,
+  Shield,
+} from "lucide-react";
 
 const SpeechRecognition = () => {
   const [location, setLocation] = useState(null);
-
-  const API_KEY = "AIzaSyALQLhxgvllyOzJiTgr467C8u3oUPtr_Rk";
-  const [message, setMessage] = useState(
-    "This is an automated call from ZARVA speech recogition system the following user:(name) is in danger kindly try to reach them we have also called the police."
-  ); //This is an automated call from the distress detection system. Please respond if you need help.
-
+  
+  
+    const API_KEY = "AIzaSyALQLhxgvllyOzJiTgr467C8u3oUPtr_Rk";
+    const [message, setMessage] = useState(
+      "This is an automated call from ZARVA speech recogition system the following user:(name) is in danger kindly try to reach them we have also called the police."
+    ); //This is an automated call from the distress detection system. Please respond if you need help.
+    
+  
+   
   // State management
   const [isListening, setIsListening] = useState(false);
   const [finalTranscript, setFinalTranscript] = useState("");
@@ -98,12 +105,13 @@ const SpeechRecognition = () => {
   ];
 
   const [status, setStatus] = useState("");
-
+  
   const [toNumber, setToNumber] = useState(localStorage.getItem("phone")); //+919835428707
   const [toNumber1, setToNumber1] = useState(localStorage.getItem("phone1")); //+919835428707
-
+  
   const initiateCall = async (newmessage) => {
     try {
+      
       const response = await fetch("http://localhost:5000/api/twilio-call", {
         method: "POST",
         headers: {
@@ -111,6 +119,27 @@ const SpeechRecognition = () => {
         },
         body: JSON.stringify({
           to: toNumber,
+          message: newmessage,
+        }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      setStatus(`Call initiated: ${data.sid}`);
+    } catch (error) {
+      setStatus("Error making call");
+    }
+  };
+  const initiateCall1 = async (newmessage) => {
+    try {
+      
+      const response = await fetch("http://localhost:5000/api/twilio-call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: toNumber1,
           message: newmessage,
         }),
       });
@@ -169,6 +198,7 @@ const SpeechRecognition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
     } else {
+      
     }
   };
 
@@ -177,84 +207,83 @@ const SpeechRecognition = () => {
     const lon = position.coords.longitude;
     console.log(lat, lon);
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${API_KEY}`;
-
+    
     fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         if (data.status === "OK") {
           const result = data.results[0];
-          const locality = result.address_components.find((comp) =>
+          const locality = result.address_components.find(comp => 
             comp.types.includes("locality")
           );
-
+          
           setLocation({
             latitude: lat,
             longitude: lon,
             formattedAddress: result.formatted_address,
-            locality: locality ? locality.long_name : "Not found",
+            locality: locality ? locality.long_name : "Not found" 
           });
           console.log(result.formatted_address);
-
+          
           setMessage(`Location: ${result.formatted_address}`);
-          // initiateCall(`Location: ${result.formatted_address}`);
+          initiateCall(`Location: ${result.formatted_address}`);
+          initiateCall1(`Location: ${result.formatted_address}`);
           initiatemessage(`Location: ${result.formatted_address}`);
           initiatemessage1(`Location: ${result.formatted_address}`);
           console.log(`Location: ${result.formatted_address}`);
         } else {
+          
         }
       })
-      .catch((error) => setError(`Error fetching location: ${error.message}`));
+      .catch(error => setError(`Error fetching location: ${error.message}`));
   };
   // Add calling functionality
-
+  
   //New
   const [savedWords, setSavedWords] = useState([]);
-  // Load saved words from localStorage
-  useEffect(() => {
-    const loadSavedWords = () => {
-      const stored = localStorage.getItem("savedWords");
-      if (stored) {
-        setSavedWords(JSON.parse(stored));
-      }
-    };
+ // Load saved words from localStorage
+ useEffect(() => {
+  const loadSavedWords = () => {
+    const stored = localStorage.getItem('savedWords');
+    if (stored) {
+      setSavedWords(JSON.parse(stored));
+    }
+  };
+  
+  loadSavedWords();
+  // Listen for storage changes in other tabs
+  window.addEventListener('storage', loadSavedWords);
+  return () => window.removeEventListener('storage', loadSavedWords);
+}, []);
 
-    loadSavedWords();
-    // Listen for storage changes in other tabs
-    window.addEventListener("storage", loadSavedWords);
-    return () => window.removeEventListener("storage", loadSavedWords);
-  }, []);
-
-  const checkHarmfulContent = useCallback(
-    (text, options = { checkSpeech: false }) => {
-      const words = text.toLowerCase().split(/\s+/);
-
-      // Combine default harmful words with saved words from localStorage
-      const allHarmfulWords = [...harmfulWords, ...savedWords];
-
-      const foundHarmfulWords = words.filter((word) =>
-        allHarmfulWords.some((harmfulWord) => word.includes(harmfulWord))
-      );
-
-      if (foundHarmfulWords.length > 0) {
-        const timestamp = new Date().toLocaleString();
-        setAlerts((prev) => [
-          ...prev,
-          {
-            type: "harmful_words",
-            content: foundHarmfulWords.join(", "),
-            timestamp,
-            severity: "high",
-            source: options.checkSpeech ? "speech" : "text",
-          },
-        ]);
-        getLocation();
-
-        // initiateCall();
-        // initiatemessage();
-      }
-    },
-    [savedWords, initiateCall, initiatemessage]
+const checkHarmfulContent = useCallback((text, options = { checkSpeech: false }) => {
+  const words = text.toLowerCase().split(/\s+/);
+  
+  // Combine default harmful words with saved words from localStorage
+  const allHarmfulWords = [...harmfulWords, ...savedWords];
+  
+  const foundHarmfulWords = words.filter((word) =>
+    allHarmfulWords.some((harmfulWord) => word.includes(harmfulWord))
   );
+
+  if (foundHarmfulWords.length > 0) {
+    const timestamp = new Date().toLocaleString();
+    setAlerts((prev) => [
+      ...prev,
+      {
+        type: "harmful_words",
+        content: foundHarmfulWords.join(", "),
+        timestamp,
+        severity: "high",
+        source: options.checkSpeech ? 'speech' : 'text'
+      },
+    ]);
+    getLocation();
+    
+    // initiateCall();
+    // initiatemessage();
+  }
+}, [savedWords]);
 
   const analyzeAudioData = useCallback((dataArray, bufferLength) => {
     const average = dataArray.reduce((a, b) => a + b) / bufferLength;
@@ -389,6 +418,16 @@ const SpeechRecognition = () => {
   const startListening = useCallback(async () => {
     setError("");
     const recognition = createSpeechRecognition();
+    const phoneNumber = localStorage.getItem("phone");
+    if (!phoneNumber) {
+      setError("Please enter an emergency contact phone number before starting the recording.");
+      return;
+    }
+    const phoneNumber1 = localStorage.getItem("phone1");
+    if (!phoneNumber1) {
+      setError("Please enter an emergency contact phone number before starting the recording.");
+      return;
+    }
     if (!recognition) {
       setError("Speech recognition is not supported in your browser.");
       return;
@@ -414,19 +453,18 @@ const SpeechRecognition = () => {
     recognition.onresult = (event) => {
       let interim = "";
       let final = "";
-
+  
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          final += event.results[i][0].transcript;
-          checkHarmfulContent(event.results[i][0].transcript);
+          final += event.results[i][0].transcript.toLowerCase();
+          checkHarmfulContent(event.results[i][0].transcript.toLowerCase());
         } else {
-          // Convert interim transcript to lowercase
           interim += event.results[i][0].transcript.toLowerCase();
         }
       }
-
-      setFinalTranscript((prev) => prev + final);
-      setInterimTranscript(interim);
+  
+      setFinalTranscript((prev) => (prev + final).toLowerCase());
+      setInterimTranscript(interim.toLowerCase());
     };
 
     recognition.start();
@@ -542,160 +580,193 @@ const SpeechRecognition = () => {
     };
   }, [recordings]);
 
+  const [activeComponent, setActiveComponent] = useState(null);
+  const toggleComponent = (component) => {
+    setActiveComponent(activeComponent === component ? null : component);
+  };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-white flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="p-6 min-w-4xl mx-auto bg-white shadow-lg rounded-xl">
-        <RestrictedWordsInput />
-        <PhoneNumberForm />
+    <div className="min-h-screen p-4 overflow-x-hidden" style={{
+      background: "linear-gradient(45deg, #4A4A29, #9C9A6A, #B5B1A8, #2E3A47)",
+      backgroundSize: "400% 400%",
+      animation: "gradient-x 15s ease infinite",
+    }} >
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left Column - Settings */}
+        <div className="w-full flex justify-center items-center flex-col">
+        <div className="flex gap-4 justify-center items-center">
+        <button
+          onClick={() => toggleComponent("restricted")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors bg-gradient-to-t from-gray-700 to-black shadow-xl text-white hover:bg-blue-600 
+            ${activeComponent === "restricted" ? "bg-blue-500" : ""}`}
+        >
+          Show Restricted Words
+        </button>
+        <button
+          onClick={() => toggleComponent("phone")}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors bg-gradient-to-t from-gray-700 to-black shadow-xl text-white hover:bg-blue-600 
+            ${activeComponent === "phone" ? "bg-blue-500" : ""}`}
+        >
+          Show Phone Form
+        </button>
       </div>
 
-      <div className="p-6 max-w-xl mx-auto bg-white shadow-lg rounded-lg w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Secure Voice Recorder
-          </h1>
-          <div className="flex items-center justify-center gap-2 text-indigo-600">
-            <Shield className="w-5 h-5" />
-            <span className="text-lg">Safety-First Voice Recording</span>
-          </div>
+      <div className="mt-4 w-full max-w-md">
+        {activeComponent === "restricted" && <RestrictedWordsInput />}
+        {activeComponent === "phone" && <PhoneNumberForm />}
+      </div>
         </div>
-        <div className="space-y-4">
-          {/* Language Selector */}
-          <div className="flex items-center gap-4 mb-6">
-            <label htmlFor="language" className="font-medium text-gray-700">
-              Select Language:
-            </label>
-            <select
-              id="language"
-              className="p-2 border rounded-md bg-white"
-              value={selectedLanguage}
-              onChange={(e) => setSelectedLanguage(e.target.value)}
-            >
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          {/* Control Buttons */}
-          <div className="flex gap-4 mb-6 ">
-            <button
-              onClick={isListening ? stopListening : startListening}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white transition-all ${
-                isListening
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-indigo-600 hover:bg-indigo-700"
-              } shadow-lg hover:scale-105`}
-            >
-              {isListening ? (
-                <>
-                  <Square className="w-5 h-5" />
-                  Stop Recording
-                </>
-              ) : (
-                <>
-                  <Mic className="w-5 h-5" />
-                  Start Recording
-                </>
-              )}
-            </button>
+        {/* Right Column - Recording Interface */}
+        <div className="w-full min-h-full flex justify-center items-center p-6 rounded-2xl">
+      <div className="bg-gradient-to-t from-gray-700 to-black shadow-xl rounded-2xl p-6 md:p-8 lg:p-10 w-full">
 
-            <button
-              onClick={clearTranscript}
-              className="flex items-center gap-2 px-6 py-3 rounded-full font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all"
-            >
-              <Trash2 className="w-5 h-5" />
-              Clear
-            </button>
-          </div>
-
-          {/* Status and Error Messages */}
-          {isListening && (
-            <div className="text-green-600 flex items-center gap-2">
-              <span className="animate-pulse">●</span> Listening...
+            <div className="text-center mb-6">
+              <h1 className="text-2xl md:text-4xl font-bold text-white mb-4">
+                Secure Voice Recorder
+              </h1>
+              <div className="flex items-center justify-center gap-2 text-indigo-600">
+                <Shield className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="text-base md:text-lg">Safety-First Voice Recording</span>
+              </div>
             </div>
-          )}
-          {error && (
-            <div className="text-red-500 p-2 bg-red-50 rounded-md">{error}</div>
-          )}
 
-          {/* Alerts Section */}
-          {alerts.length > 0 && (
-            <div className="mt-4 p-4 bg-red-50 rounded-md">
-              <h3 className="font-medium text-red-700 mb-2">Content Alerts:</h3>
-              <div className="space-y-2">
-                {alerts.map((alert, index) => (
-                  <div
-                    key={index}
-                    className="text-red-600 text-sm p-2 bg-red-100 rounded"
-                  >
-                    <span className="font-medium">{alert.timestamp}</span>:{" "}
-                    {alert.type === "harmful_words"
-                      ? `Harmful content detected: ${alert.content}`
-                      : alert.content}
+            {/* Language Selector */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-6">
+              <label htmlFor="language" className="font-medium text-white">
+                Select Language:
+              </label>
+              <select
+                id="language"
+                className="w-full sm:w-auto p-2 border rounded-md bg-white"
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+              >
+                {languages.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <button
+                onClick={isListening ? stopListening : startListening}
+                className={`flex items-center justify-center gap-2 px-4 py-3 rounded-full font-medium text-white transition-all w-full sm:w-auto ${
+                  isListening
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                } shadow-lg hover:scale-105`}
+              >
+                {isListening ? (
+                  <>
+                    <Square className="w-4 h-4 md:w-5 md:h-5" />
+                    Stop Recording
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-4 h-4 md:w-5 md:h-5" />
+                    Start Recording
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={clearTranscript}
+                className="flex items-center justify-center gap-2 px-4 py-3 rounded-full font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all w-full sm:w-auto"
+              >
+                <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
+                Clear
+              </button>
+            </div>
+
+            {/* Status and Errors */}
+            {isListening && (
+              <div className="text-green-600 flex items-center gap-2 text-sm md:text-base">
+                <span className="animate-pulse">●</span> Listening...
+              </div>
+            )}
+            {error && (
+              <div className="text-red-500 p-2 bg-red-50 rounded-md text-sm md:text-base">
+                {error}
+              </div>
+            )}
+
+            {/* Alerts Section */}
+            {alerts.length > 0 && (
+              <div className="mt-4 p-3 md:p-4 bg-red-50 rounded-md">
+                <h3 className="font-medium text-red-700 mb-2 text-sm md:text-base">
+                  Content Alerts:
+                </h3>
+                <div className="space-y-2">
+                  {alerts.map((alert, index) => (
+                    <div
+                      key={index}
+                      className="text-red-600 text-xs md:text-sm p-2 bg-red-100 rounded"
+                    >
+                      <span className="font-medium">{alert.timestamp}</span>:{" "}
+                      {alert.type === "harmful_words"
+                        ? `Harmful content detected: ${alert.content}`
+                        : alert.content}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Transcripts */}
+            <div className="space-y-4 mt-4" >  
+              <div className="p-3 md:p-4 bg-gray-50 rounded-md min-h-[100px]">
+                <h3 className="font-medium mb-2 text-sm md:text-base">Final Transcript:</h3>
+                <p className="whitespace-pre-wrap text-sm md:text-base text-black">{finalTranscript}</p>
+              </div>
+              <div className="p-3 md:p-4 bg-gray-50 rounded-md min-h-[50px]">
+                <h3 className="font-medium mb-2 text-sm md:text-base">Interim Transcript:</h3>
+                <p className="text-gray-600 italic text-sm md:text-base ">{interimTranscript}</p>
+              </div>
+            </div>
+
+            {/* Recordings */}
+            {recordings.length > 0 && (
+              <div className="space-y-4 mt-6">
+                <h3 className="font-medium text-base md:text-lg">Last Recording:</h3>
+                {recordings.map((recording, index) => (
+                  <div key={index} className="p-3 md:p-4 bg-gray-50 rounded-md">
+                    <div className="mb-2">
+                      <span className="text-xs md:text-sm text-gray-600">
+                        {recording.timestamp} (
+                        {languages.find((l) => l.code === recording.language)?.name})
+                      </span>
+                    </div>
+                    <audio
+                      controls
+                      src={recording.url}
+                      className="w-full mb-2"
+                      autoPlay
+                    />
+                    {recording.transcript && (
+                      <div className="text-xs md:text-sm text-gray-700 mt-2">
+                        <strong>Transcript:</strong> {recording.transcript}
+                      </div>
+                    )}
+                    {recording.alerts && recording.alerts.length > 0 && (
+                      <div className="mt-2 text-xs md:text-sm text-red-600 bg-red-50 p-2 rounded">
+                        <strong>Alerts during recording:</strong>
+                        <ul className="list-disc pl-4 mt-1">
+                          {recording.alerts.map((alert, alertIndex) => (
+                            <li key={alertIndex}>
+                              {alert.timestamp}: {alert.content}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Transcripts */}
-          <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-md min-h-[100px]">
-              <h3 className="font-medium mb-2">Final Transcript:</h3>
-              <p className="whitespace-pre-wrap">{finalTranscript}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-md min-h-[50px]">
-              <h3 className="font-medium mb-2">Interim Transcript:</h3>
-              <p className="text-gray-600 italic">{interimTranscript}</p>
-            </div>
+            )}
           </div>
-
-          {/* Recordings */}
-          {recordings.length > 0 && (
-            <div className="space-y-4 mt-6">
-              <h3 className="font-medium text-lg">Last Recording:</h3>
-              {recordings.map((recording, index) => (
-                <div key={index} className="p-4 bg-gray-50 rounded-md">
-                  <div className="mb-2">
-                    <span className="text-sm text-gray-600">
-                      {recording.timestamp} (
-                      {
-                        languages.find((l) => l.code === recording.language)
-                          ?.name
-                      }
-                      )
-                    </span>
-                  </div>
-                  <audio
-                    controls
-                    src={recording.url}
-                    className="w-full mb-2"
-                    autoPlay
-                  />
-                  {recording.transcript && (
-                    <div className="text-sm text-gray-700 mt-2">
-                      <strong>Transcript:</strong> {recording.transcript}
-                    </div>
-                  )}
-                  {recording.alerts && recording.alerts.length > 0 && (
-                    <div className="mt-2 text-sm text-red-600 bg-red-50 p-2 rounded">
-                      <strong>Alerts during recording:</strong>
-                      <ul className="list-disc pl-4 mt-1">
-                        {recording.alerts.map((alert, alertIndex) => (
-                          <li key={alertIndex}>
-                            {alert.timestamp}: {alert.content}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -34,57 +34,63 @@ const cabProviders = [
 const Features = () => {
   return (
     <div
-      className="min-h-screen py-8"
+      className="min-h-screen py-2 md:py-8"
       style={{
         background: "linear-gradient(45deg, #4A4A29, #9C9A6A, #B5B1A8, #2E3A47)",
         backgroundSize: "400% 400%",
         animation: "gradient-x 15s ease infinite",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12 sm:mb-16">
-        <h2 className="text-6xl sm:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-t from-gray-700 to-black mb-6 leading-tight">
+      <div className="max-w-7xl mx-auto px-3 md:px-6">
+        <div className="text-center mb-3 md:mb-12">
+          <h2 className="text-2xl md:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-t from-gray-700 to-black mb-1 md:mb-6 leading-tight">
             Ready to Ride in Style?
           </h2>
-          <p className="text-lg text-black mb-6 max-w-3xl mx-auto">
-            Choose your favorite ride and enjoy a smooth and stylish journey with top-rated providers.
+          <p className="text-xs md:text-lg text-black md:mb-6 max-w-3xl mx-auto">
+            Choose your favorite ride and enjoy a smooth journey.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {cabProviders.map((provider) => (
             <Link to={provider.link} key={provider.name}>
               <div
-                className={`group relative bg-gray-900/80 backdrop-blur-lg rounded-2xl p-8 transition-all duration-300
-                          hover:-translate-y-2 hover:shadow-xl hover:shadow-[rgba(213,197,138,0.3)] cursor-pointer
+                className={`group relative bg-gray-900/80 backdrop-blur-lg rounded-lg md:rounded-2xl p-2 md:p-8 transition-all duration-300
+                          hover:-translate-y-1 hover:shadow-lg hover:shadow-[rgba(213,197,138,0.3)] cursor-pointer
                           border border-[#d5c58a]/20
                           active:shadow-inner active:bg-gray-800/80
                           active:translate-y-0`}
               >
-                <div className="flex flex-col items-center text-center min-h-[400px]">
+                <div className="flex flex-col items-center text-center space-y-1.5 md:space-y-4">
                   <div
-                    className={`${provider.bgColor} ${provider.hoverColor} rounded-full flex items-center justify-center mb-6 transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-lg`}
+                    className={`${provider.bgColor} ${provider.hoverColor} rounded-full flex items-center justify-center transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg`}
                   >
-                    <img src={provider.logo} alt={provider.name} className="w-20 h-20 object-contain rounded-full" />
+                    <img 
+                      src={provider.logo} 
+                      alt={provider.name} 
+                      className="w-8 h-8 md:w-20 md:h-20 object-contain rounded-full" 
+                    />
                   </div>
 
-                  <h3 className="text-2xl font-semibold text-white mb-4">
+                  <h3 className="text-sm md:text-2xl font-semibold text-white">
                     {provider.name}
                   </h3>
-                  <p className="text-gray-400 text-base mb-4">{provider.info}</p>
+                  <p className="text-xs md:text-base text-gray-400 line-clamp-1 md:line-clamp-none max-w-[200px]">
+                    {provider.info}
+                  </p>
 
-                  <div className="transition-all duration-300 opacity-0 group-hover:opacity-100 mb-4">
-                    <p className="text-lg font-semibold text-[#d5c58a]">{provider.hoverText}</p>
+                  <div className="transition-all duration-300 opacity-0 group-hover:opacity-100">
+                    <p className="text-xs md:text-lg font-semibold text-[#d5c58a]">
+                      {provider.hoverText}
+                    </p>
                   </div>
 
-                  <div className="mt-4">
-                    <button className="bg-gradient-to-r from-[#d0c085] to-[#c0b075] text-black py-2 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
-                      Ready to Ride
-                    </button>
-                  </div>
+                  <button className="bg-gradient-to-r from-[#d0c085] to-[#c0b075] text-black py-0.5 md:py-2 px-3 md:px-6 rounded-full text-xs md:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
+                    Ready to Ride
+                  </button>
                 </div>
 
-                <div className="absolute inset-0 rounded-2xl transition-colors duration-300 group-hover:bg-[#d5c58a]/10 group-active:bg-[#d5c58a]/20" />
+                <div className="absolute inset-0 rounded-lg md:rounded-2xl transition-colors duration-300 group-hover:bg-[#d5c58a]/10 group-active:bg-[#d5c58a]/20" />
               </div>
             </Link>
           ))}

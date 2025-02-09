@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-
+import React,{useState} from 'react';
+// import { Menu, X } from 'lucide-react';
+import { Link, useNavigate } from "react-router-dom";
+import { SignedIn,  UserButton } from '@clerk/clerk-react'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
-    <nav className="bg-gradient-to-br from-[#615839] via-gray-900 to-black px-6 md:px-28 py-4 flex justify-between items-center relative">
+    <nav className="bg-gradient-to-br from-[#615839] via-gray-900 to-black px-6 md:px-28 py-2 flex justify-between items-center relative">
       {/* Left side - Logo and Brand */}
       <div className="flex items-center">
         <svg
@@ -26,13 +24,16 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Button */}
-      <button
-        className="md:hidden text-white focus:outline-none"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Menu"
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
+      <div className='text-white'>
+        <button className='cursor-pointer 'onClick={() => navigate("/Features")}>
+        
+      <SignedIn >
+        <UserButton />
+      </SignedIn>
+        </button>
+      
+      </div>
+      
 
       {/* Right side - Authentication Buttons */}
       <div
@@ -41,18 +42,8 @@ const Navbar = () => {
         <Link to="/" className="text-white hover:text-gray-300 text-base font-medium">
           Home
         </Link>
-        <div className='text-white '>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
+        
       </div>
-     
-
-    <SignedIn>
-        <UserButton />
-      </SignedIn>
-      </div>
-      
     </nav>
   );
 };

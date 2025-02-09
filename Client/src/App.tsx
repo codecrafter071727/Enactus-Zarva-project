@@ -17,28 +17,37 @@ function App() {
   const [isMobileApp, setIsMobileApp] = useState(false);
 
   useEffect(() => {
-    // Check if it's being opened as a mobile app
-    // This checks for standalone mode (installed PWA) or mobile app view
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
     setIsMobileApp(isStandalone || isMobile);
+
+    // Prevent scrolling on mobile when on home page
+    if (isMobile && window.location.pathname === '/') {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    }
+
+    // Cleanup function to re-enable scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset';
+    };
   }, []);
 
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-[#d5c58a] via-gray-800 to-black">
+      <div className={`min-h-screen bg-gradient-to-br from-[#d5c58a] via-gray-800 to-black ${isMobileApp ? 'h-screen' : ''}`}>
         <Navigation />
-        <main>
+        <main className={isMobileApp ? 'h-[calc(100vh-64px)]' : ''}>
           <Routes>
             <Route
               path="/"
               element={
                 <>
                   <Hero />
-                  <Features />
                   {!isMobileApp && (
                     <>
+                      
                       <About />
                       <Contact />
                     </>
@@ -51,6 +60,7 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/speech" element={<Speechrecognisation />} />
             <Route path="/safer-cab/comingsoon" element={<CoolComingSoon />} />
+            <Route path="/features" element={<Features />} />
             {!isMobileApp && <Route path="/About" element={<About />} />}
           </Routes>
         </main>
