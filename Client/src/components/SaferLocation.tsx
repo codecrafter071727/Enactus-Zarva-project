@@ -103,7 +103,7 @@ const App = () => {
       setLoading(true);
       setError(null);
       const response = await axios.post<RouteData>(
-        "https://enactus-zarva-project.onrender.com/v1/api/carRoute",
+        "http://localhost:3000/v1/api/carRoute",
         { origin, destination }
       );
 
