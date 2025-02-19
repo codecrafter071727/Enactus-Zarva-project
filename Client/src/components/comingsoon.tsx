@@ -96,7 +96,7 @@ const ComingSoonLuxury = () => {
       
       </div>
 
-      <style jsx>{`
+      <style>{`
         .animate-gradient {
           animation: gradientAnimation 15s ease infinite;
           background-size: 400% 400%;
